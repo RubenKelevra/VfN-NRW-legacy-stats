@@ -6,7 +6,7 @@ BATIF=$(for i in `ls -1 /sys/class/net/`; do [ -f /sys/class/net/$i/batman_adv/m
 (
 echo ///start
 echo -n ///build=
-echo $(cat $(uci get autoupdater.settings.version_file))-$(uci get autoupdater.settings.branch)
+echo "$(cat /lib/gluon/release) (gluon-$(cat /lib/gluon/gluon-version)) autoupdate-branch: $(uci get autoupdater.settings.branch), autoupdate: $(uci get autoupdater.settings.enabled)"
 
 echo -n ///hwid=
 ip link show eth0 | grep "link/ether" | sed "s/^[ ]*//" | cut -d' ' -f2 | sed "s/://g"
@@ -60,7 +60,7 @@ echo -n ///fastd=
 [ $(uci get fastd.mesh_vpn.secret) != 'generate' ] &&  echo $(/etc/init.d/fastd show_key mesh_vpn)
 
 echo -n ///community=
-echo $(uci get freifunk.hotspot.community)
+echo $(cat /lib/gluon/site.conf | grep "site_code" | grep "=" | sed -e "s/site_code =//" | tr -d "'" | tr -d "," | sed -e 's/[[:space:]]//g')
 
 tmp=""
 
