@@ -1,6 +1,6 @@
 #!/bin/sh
 # source : https://github.com/FreifunkAdvanced/geolocate/blob/master/geolocate
-(iw dev client0 scan && iw dev client1 scan) | \
+(iw dev client0 scan lowpri passive && iw dev client1 scan lowpri passive) | \
 egrep -o -e '^BSS [0-9a-f:]{17}' -e '^[[:space:]]SSID.*' -e '^[[:space:]]signal: [0-9.-]*' \
 | tr "\n\t" " " \
 | sed 's/BSS /\n/g' \
