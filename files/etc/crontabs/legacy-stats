@@ -1,0 +1,4 @@
+*/5    * * * * sh /usr/sbin/ff-stats
+0     14 * * * sh /usr/sbin/ff-stats-wlanscan > /tmp/wlanscan
+0      2 * * * sh /usr/sbin/ff-stats-wlanscan > /tmp/wlanscan
+0      * * * * iw dev wlan0 scan lowpri passive && iw dev wlan1 scan lowpri passive
