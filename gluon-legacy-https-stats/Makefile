@@ -5,17 +5,13 @@ PKG_VERSION:=1
 
 PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
-include $(INCLUDE_DIR)/package.mk
+include $(GLUONDIR)/include/package.mk
 
 define Package/gluon-legacy-https-stats
   SECTION:=gluon
   CATEGORY:=Gluon
   TITLE:=Legacy https stats
   DEPENDS:=+gluon-core +curl
-endef
-
-define Package/gluon-legacy-https-stats/description
-	Gluon community wifi mesh firmware framework: legacy https stats
 endef
 
 define Build/Prepare
