@@ -201,5 +201,5 @@ if [ -z "$IPV6" ]; then
 fi
 
 for i in /tmp/ff-stats/*; do 
-  ff-curl api/collect.php?ip="$IPV6" -v -X POST --data "`cat $i`" > /tmp/ff-stats-result && rm $i || exit
+  /usr/sbin/ff-curl api/collect.php?ip="$IPV6" -v -X POST --data "`cat $i`" > /tmp/ff-stats-result && rm $i || exit
 done
