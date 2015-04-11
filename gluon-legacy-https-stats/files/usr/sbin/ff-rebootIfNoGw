@@ -9,12 +9,13 @@ else
   rm -f /tmp/nogwflag
 fi
 
-ipv6_gw="$(uci get network.l2meshroute.gateway)" #fixme, get subnet from site-conf and add ::ac1 for ping
-if [ ! -z "$ipv6_gw" ]; then
-  ping6 "$ipv6_gw" -c 10 >/dev/null 2>&1
+ipv6_subnet="$(cat /lib/gluon/site.conf | grep "prefix6" | grep "=" | sed -e "s/prefix6 =//" | sed -e "s/\/64//" | tr -d "'" | tr -d "," | sed -e 's/[[:space:]]//g')"
+if [ ! -z "$ipv6_subnet" ]; then
+  ipv6_anycast="${ipv6_subnet}ac1"
+  ping6 "$ipv6_anycast" -c 10 >/dev/null 2>&1
   returnval="$?"
 fi
-if [ "$returnval" -eq 0 -or -z "$ipv6_gw" ]; then
+if [ "$returnval" -eq 0 -or -z "$ipv6_subnet" ]; then
   logger "IPv6 Router NOT reachable."
   if [ -f /tmp/noip6routerflag ] ; then
     reboot
