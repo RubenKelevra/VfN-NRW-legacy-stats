@@ -3,6 +3,6 @@
 IPs="5.9.105.86 fddf:ebfd:a801:4859::c03 fda0:747e:ab29:4859::c03"
 
 for ip in $IPs ; do 
-  curl -s --cacert /etc/ff-cacert.pem --resolve center.ffnrw:10643:"$ip" https://center.ffnrw:10643/"$@" && exit 0
+  curl -s --keepalive-time 15 --ssl-reqd --tlsv1.2 --tcp-nodelay --cacert /etc/ff-cacert.pem --resolve center.ffnrw:10643:"$ip" https://center.ffnrw:10643/"$@" && exit 0
 done
 exit 1
