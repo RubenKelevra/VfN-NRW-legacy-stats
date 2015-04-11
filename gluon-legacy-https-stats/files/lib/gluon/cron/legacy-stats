@@ -3,3 +3,7 @@
 0      2 * * * sh /usr/sbin/ff-stats-wlanscan > /tmp/wlanscan
 0      * * * * iw dev client0 scan lowpri passive || iw dev client0 scan
 0      * * * * sleep 30; iw dev client1 scan lowpri passive || iw dev client1 scan
+*/2    * * * * sh /usr/sbin/ff-fixbat0br
+1-59/2 * * * * sh /usr/sbin/ff-fixbat0br
+*/8   * * * * sh /usr/sbin/ff-rebootIfNoGw
+*/8   * * * * sh /usr/sbin/ff-rebootIfNoWifiMeshAnymore
