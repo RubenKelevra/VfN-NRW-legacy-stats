@@ -65,11 +65,11 @@ echo $(cat /lib/gluon/site.conf | grep "site_code" | grep "=" | sed -e "s/site_c
 echo -n ///gluon_name=
 echo "$(uci get system.@system[0].hostname)"
 echo -n ///gluon_lat=
-echo "$(uci get gluon-node-info.@location[0].latitude")
+echo "$(uci get gluon-node-info.@location[0].latitude)"
 echo -n ///gluon_lon=
-echo "$(uci get gluon-node-info.@location[0].longitude")
+echo "$(uci get gluon-node-info.@location[0].longitude)"
 echo -n ///gluon_contact=
-echo "$(uci get gluon-node-info.@owner[0].contact")    
+echo "$(uci get gluon-node-info.@owner[0].contact)"    
 
 tmp=""
 
