@@ -12,21 +12,21 @@ fi
 ipv6_gw="$(uci get network.l2meshroute.gateway)" #fixme, get subnet from site-conf and add ::ac1 for ping
 if [ ! -z "$ipv6_gw" ]; then
   ping6 "$ipv6_gw" -c 10 >/dev/null 2>&1
-  if test $? -eq 0; then
-    logger "IPv6 Router reachable."
-    rm -f /tmp/noip6routerflag
+  returnval="$?"
+fi
+if [ "$returnval" -eq 0 -or -z "$ipv6_gw" ]; then
+  logger "IPv6 Router NOT reachable."
+  if [ -f /tmp/noip6routerflag ] ; then
+    reboot
+    exit 0
   else
-    logger "IPv6 Router NOT reachable."
-    if [ -f /tmp/noip6routerflag ] ; then
-      reboot
-      exit 0
-    else
-      touch /tmp/noip6routerflag
-    fi
+    touch /tmp/noip6routerflag
   fi
 else
-  logger "IPv6 Router NOT configured."
+  logger "IPv6 Router reachable."
+  rm -f /tmp/noip6routerflag
 fi
+
 
 #check if wifi is stucking
 rm -f /tmp/wifi.running
