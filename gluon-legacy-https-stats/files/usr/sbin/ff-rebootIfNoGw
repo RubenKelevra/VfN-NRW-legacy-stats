@@ -9,7 +9,7 @@ else
   rm -f /tmp/nogwflag
 fi
 
-ipv6_gw="$(uci get network.l2meshroute.gateway)"
+ipv6_gw="$(uci get network.l2meshroute.gateway)" #fixme, get subnet from site-conf and add ::ac1 for ping
 if [ ! -z "$ipv6_gw" ]; then
   ping6 "$ipv6_gw" -c 10 >/dev/null 2>&1
   if test $? -eq 0; then
