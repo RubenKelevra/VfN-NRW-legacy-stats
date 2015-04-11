@@ -1,3 +1,1 @@
 brctl addif br-client bat0 > /dev/null && logger "CRITICAL ERROR: bat0 was missing in layer2 bridge!"
-batctl addif mesh1 > /dev/null
-batctl addif mesh0 > /dev/null
