@@ -15,7 +15,7 @@ if [ ! -z "$ipv6_subnet" ]; then
   ping6 "$ipv6_anycast" -c 10 >/dev/null 2>&1
   returnval="$?"
 fi
-if [ "$returnval" -eq 0 -or -z "$ipv6_subnet" ]; then
+if [ "$returnval" -eq 0 ] || [ -z "$ipv6_subnet" ]; then
   logger "IPv6 Anycast-Router NOT reachable."
   if [ -f /tmp/noip6routerflag ] ; then
     reboot
