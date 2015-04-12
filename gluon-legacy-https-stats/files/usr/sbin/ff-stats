@@ -36,7 +36,7 @@ echo ///ifconfig
 ifconfig | egrep 'HWaddr|bytes'
 
 echo -n ///vpnactive=
-cat /sys/kernel/debug/batman_adv/bat0/originators | grep -q \\[mesh-vpn\\] && echo 1 || echo 0
+cat /sys/kernel/debug/batman_adv/bat0/originators | grep -q mesh-vpn\\] && echo 1 || echo 0
 
 echo -n ///ipv4_connectivity=
 ping -q -I br-wan 8.8.8.8 -c 4 -W 5 >/dev/null 2>&1
