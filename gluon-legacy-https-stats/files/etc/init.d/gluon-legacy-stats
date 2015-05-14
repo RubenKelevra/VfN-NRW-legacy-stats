@@ -1,0 +1,10 @@
+#!/bin/sh /etc/rc.common
+
+START=95
+
+start () {
+	iw dev client0 scan passive 2>&1 > /dev/null || true
+	iw dev client1 scan passive 2>&1 > /dev/null || true
+	sh /usr/sbin/ff-stats-wlanscan > /tmp/wlanscan || true
+	sh /usr/sbin/ff-stats
+}
