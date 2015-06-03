@@ -68,6 +68,8 @@ echo -n ///gluon_lat=
 echo "$(uci get gluon-node-info.@location[0].latitude)"
 echo -n ///gluon_lon=
 echo "$(uci get gluon-node-info.@location[0].longitude)"
+echo -n ///gluon_alt=
+echo "$(uci get gluon-node-info.@location[0].altitude)"
 echo -n ///gluon_contact=
 echo "$(uci get gluon-node-info.@owner[0].contact)"    
 
