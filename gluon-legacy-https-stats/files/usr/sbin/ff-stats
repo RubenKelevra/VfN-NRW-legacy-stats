@@ -27,9 +27,13 @@ echo ///l2mesh=$L2MESH
 
 echo ///batif=$BATIF
 
-echo ///wlanclients
+clients=""
+echo '///wlanclients'
 for if in $L2MESH; do
-iw dev $if station dump | grep ^Station | cut -d ' ' -f 2
+  clients=`iw dev $if station dump | grep ^Station | cut -d ' ' -f 2`
+done
+for mac in $clients; do
+  echo "00:00:00:00:00:00"
 done
 
 echo ///ifconfig
