@@ -69,7 +69,7 @@ echo $(cat /lib/gluon/site.conf | grep "site_code" | grep "=" | sed -e "s/site_c
 echo -n ///gluon_name=
 echo "$(uci get system.@system[0].hostname)"
 echo -n ///gluon_primarymac=
-echo "$(uci get gluon.sysconfig.primary_mac)"
+echo "$(cat /lib/gluon/core/sysconfig/primary_mac)"
 echo -n ///gluon_lat=
 echo "$(uci get gluon-node-info.@location[0].latitude)"
 echo -n ///gluon_lon=
