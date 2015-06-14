@@ -1,10 +1,31 @@
 #!/bin/sh /etc/rc.common
 
-START=95
+START=96
 
 start () {
+	sleep 10
 	iw dev client0 scan passive 2>&1 > /dev/null || true
 	iw dev client1 scan passive 2>&1 > /dev/null || true
 	sh /usr/sbin/ff-stats-wlanscan > /tmp/wlanscan || true
-	sh /usr/sbin/ff-stats
+	
+	for i in 1 2 3 4 5 6 7 8 9 10
+	do
+		ping -q -I br-wan 8.8.8.8 -c 4 -W 5 >/dev/null 2>&1
+		if test $? -eq 0; then
+	  		sh /usr/sbin/ff-stats
+	  		break
+	  	else
+			ipv6_subnet="$(cat /lib/gluon/site.conf | grep 'prefix6' | grep '=' | sed -e 's/prefix6 =//' | sed -e 's/\/64//' | tr -d ''\''' | tr -d ',' | sed -e 's/[[:space:]]//g')"
+			if [ ! -z "$ipv6_subnet" ]; then
+	  			ipv6_anycast="${ipv6_subnet}ac1"
+	  			ping6 "$ipv6_anycast" -c 10 >/dev/null 2>&1
+	  			returnval="$?"
+			fi
+			if [ "$returnval" -eq 0 ] && [ ! -z "$ipv6_subnet" ]; then
+	  			sh /usr/sbin/ff-stats
+	  			break
+			fi
+		fi
+		sleep 10
+	done	
 }
