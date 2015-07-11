@@ -80,6 +80,9 @@ echo -n ///gluon_contact=
 echo "$(uci get gluon-node-info.@owner[0].contact)"    
 echo -n ///gluon_advisor=
 echo "$(uci get gluon-node-info.@advisor[0].contact)"    
+echo -n ///gluon_address=
+echo "$(uci get gluon-node-info.@location[0].address)"
+
 
 tmp=""
 
