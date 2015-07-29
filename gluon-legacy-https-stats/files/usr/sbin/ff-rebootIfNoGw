@@ -1,7 +1,7 @@
 batctl gwl | grep -q "No gateways in range"
 if [ $? == 0 ] ; then
   if [ -f /tmp/nogwflag ] ; then
-    reboot   
+    reboot -f   
   else
     touch /tmp/nogwflag
   fi
@@ -18,7 +18,7 @@ fi
 if [ "$returnval" -ne 0 ] || [ -z "$ipv6_subnet" ]; then
   logger "IPv6 Anycast-Router NOT reachable."
   if [ -f /tmp/noip6routerflag ] ; then
-    reboot
+    reboot -f
     exit 0
   else
     touch /tmp/noip6routerflag
