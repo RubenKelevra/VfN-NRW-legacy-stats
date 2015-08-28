@@ -1,4 +1,7 @@
 #!/bin/sh
+
+mkdir -p /etc/ssl/certs #fix polarssl ... polarssl sucks.
+
 [ ! -d /tmp/ff-stats/ ] && mkdir /tmp/ff-stats/
 L2MESH=$(/usr/sbin/brctl show | sed -n -e '/^br-client[[:space:]]/,/^\S/ { /^\(br-client[[:space:]]\|\t\)/s/^.*\t//p }' | grep -v bat0 | tr '\n' ' ')
 BATIF=$(for i in `ls -1 /sys/class/net/`; do [ -f /sys/class/net/$i/batman_adv/mesh_iface ] && grep -q bat0 /sys/class/net/$i/batman_adv/mesh_iface && echo -n "$i "; done)
