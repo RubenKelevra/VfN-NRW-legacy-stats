@@ -28,6 +28,29 @@ else
   rm -f /tmp/noip6routerflag
 fi
 
+stats_server_IPs="fddf:ebfd:a801:4859::c03 fda0:747e:ab29:4859::c03"
+onereachable=0
+for ip in $stats_server_IPs; do
+  ping6 "$ip" -c 10 >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    onereachable=1
+  fi
+done
+if [ "$onereachable" -eq 1 ]; then
+  logger "Stat-Server reachable."
+  [ -f /tmp/noip6statserverflag ] && rm -f /tmp/noip6routerflag 
+else
+  
+  if [ -f /tmp/noip6statserverflag ] ; then
+    logger "Stat-Server NOT reachable... rebooting in 10 seconds..."
+    sleep 10
+    reboot -f
+    exit 0
+  else
+    logger "Stat-Server NOT reachable."
+    touch /tmp/noip6statserverflag
+  fi
+fi
 
 #check if wifi is stucking
 rm -f /tmp/wifi.running
