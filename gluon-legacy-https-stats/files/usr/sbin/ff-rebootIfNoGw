@@ -16,7 +16,7 @@ if [ ! -z "$ipv6_subnet" ]; then
   returnval="$?"
 fi
 if [ "$returnval" -ne 0 ] || [ -z "$ipv6_subnet" ]; then
-  logger "IPv6 Anycast-Router NOT reachable."
+  logger "IPv6 Anycast-IP NOT reachable."
   if [ -f /tmp/noip6routerflag ] ; then
     reboot -f
     exit 0
@@ -24,7 +24,7 @@ if [ "$returnval" -ne 0 ] || [ -z "$ipv6_subnet" ]; then
     touch /tmp/noip6routerflag
   fi
 else
-  logger "IPv6 Anycast-Router reachable."
+  logger "IPv6 Anycast-IP reachable."
   rm -f /tmp/noip6routerflag
 fi
 
