@@ -1,6 +1,6 @@
 */5    * *   * * sh /usr/sbin/ff-stats
-0     14 *   * * sh /usr/sbin/ff-stats-wlanscan > /tmp/wlanscan
-0      2 *   * * sh /usr/sbin/ff-stats-wlanscan > /tmp/wlanscan
+2     14 *   * * sh /usr/sbin/ff-stats-wlanscan > /tmp/wlanscan
+2      2 *   * * sh /usr/sbin/ff-stats-wlanscan > /tmp/wlanscan
 0      * *   * * iw dev client0 scan lowpri passive || iw dev client0 scan
 0      * *   * * sleep 30; iw dev client1 scan lowpri passive || iw dev client1 scan
 */2    * *   * * sh /usr/sbin/ff-fixbat0br
