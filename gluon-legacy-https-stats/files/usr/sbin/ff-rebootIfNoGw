@@ -54,6 +54,6 @@ fi
 
 #check if wifi is stucking
 rm -f /tmp/wifi.running
-(iw dev > /dev/null && touch /tmp/wifi.running) &
+(iw dev > /dev/null && touch /tmp/wifi.running || if [ "$?" -eq 127 ]; then touch /tmp/wifi.running; fi ) &
 sleep 5
 [ ! -f /tmp/wifi.running ] && reboot -f
