@@ -8,7 +8,7 @@ if [ $? == 0 ] ; then
   [ -f $mesh0gone ] && rm $mesh0gone
 else
   if [ -f $mesh0 ]; then
-    [ -f $mesh0gone ] && reboot; exit
+    [ -f $mesh0gone ] && reboot -f ; exit
     touch $mesh0gone
   fi
 fi
