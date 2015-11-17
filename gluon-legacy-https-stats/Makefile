@@ -6,7 +6,7 @@ PKG_RELEASE:=1
 
 PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
-include $(GLUONDIR)/package.mk
+include $(INCLUDE_DIR)/package.mk
 
 define Package/gluon-legacy-https-stats
   SECTION:=gluon
