@@ -12,7 +12,7 @@ define Package/gluon-legacy-https-stats
   SECTION:=gluon
   CATEGORY:=Gluon
   TITLE:=Legacy https stats
-  DEPENDS:=+curl
+  DEPENDS:=+curl +@CONFIG_LIBCURL_NOSSL
 endef
 
 define Build/Prepare
