@@ -67,7 +67,7 @@ echo -n ///fastd=
 [ $(uci get fastd.mesh_vpn.secret) != 'generate' ] &&  echo $(/etc/init.d/fastd show_key mesh_vpn)
 
 echo -n ///community=
-echo $(cat /lib/gluon/site.conf | grep "site_code" | grep "=" | sed -e "s/site_code =//" | tr -d "'" | tr -d "," | cut -d '-' -f 1 | sed -e 's/[[:space:]]//g')
+echo $(lua -e 'print(require("gluon.site_config").site_code)')
 
 echo -n ///gluon_name=
 echo "$(uci get system.@system[0].hostname)"
