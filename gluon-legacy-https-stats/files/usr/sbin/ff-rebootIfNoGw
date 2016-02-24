@@ -9,7 +9,7 @@ else
   rm -f /tmp/nogwflag
 fi
 
-ipv6_subnet="$(cat /lib/gluon/site.conf | grep "prefix6" | grep "=" | sed -e "s/prefix6 =//" | sed -e "s/\/64//" | tr -d "'" | tr -d "," | sed -e 's/[[:space:]]//g')"
+ipv6_subnet="$(lua -e 'print(require("gluon.site_config").prefix6)' | sed -e 's/\/64//')"
 if [ ! -z "$ipv6_subnet" ]; then
   ipv6_anycast="${ipv6_subnet}ac1"
   ping6 "$ipv6_anycast" -c 10 >/dev/null 2>&1
