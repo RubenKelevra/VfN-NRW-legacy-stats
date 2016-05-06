@@ -1,0 +1,3 @@
+#!/bin/sh
+
+upgrade_started='/tmp/autoupdate.lock'
