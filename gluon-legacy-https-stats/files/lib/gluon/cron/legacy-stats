@@ -7,4 +7,4 @@
 */8    * * * *   sh /usr/sbin/ff-rebootIfNoGw
 */8    * * * *   sh /usr/sbin/ff-rebootIfNoWifiMeshAnymore
 0      5 * * 2-7 sh /usr/sbin/ff-RebootWithNoWifiClients
-0      5 * * 1   reboot -f
+0      5 * * 1   sh /usr/sbin/ff-secureReboot
