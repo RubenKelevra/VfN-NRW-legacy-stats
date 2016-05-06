@@ -1,5 +1,8 @@
 mesh0='/tmp/wifi_mesh0_mesh'
 mesh0gone='/tmp/wifi_mesh0_mesh_gone'
+upgrade_started='/tmp/sysupgrade.lock'
+
+[ -f $upgrade_started ] && exit
 
 batctl o | grep -q "mesh0"
 if [ $? == 0 ] ; then
@@ -8,7 +11,11 @@ if [ $? == 0 ] ; then
   [ -f $mesh0gone ] && rm $mesh0gone
 else
   if [ -f $mesh0 ]; then
-    [ -f $mesh0gone ] && reboot -f ; exit
+    if [ -f $mesh0gone ]; then
+      [ -f $upgrade_started ] && exit
+      reboot -f
+      exit
+    fi
     touch $mesh0gone
   fi
 fi
