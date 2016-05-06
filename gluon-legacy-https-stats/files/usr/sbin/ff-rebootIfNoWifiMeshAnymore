@@ -1,6 +1,6 @@
 mesh0='/tmp/wifi_mesh0_mesh'
 mesh0gone='/tmp/wifi_mesh0_mesh_gone'
-upgrade_started='/tmp/sysupgrade.lock'
+upgrade_started='/tmp/autoupdate.lock'
 
 [ -f $upgrade_started ] && exit
 
