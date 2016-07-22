@@ -5,7 +5,7 @@ upgrade_started='/tmp/autoupdate.lock'
 batctl gwl | grep -q "No gateways in range"
 if [ $? == 0 ] ; then
   if [ -f /tmp/nogwflag ] ; then
-    [ -f $upgrade_started ] && exitr
+    [ -f $upgrade_started ] && exit 0
     reboot -f   
   else
     touch /tmp/nogwflag
