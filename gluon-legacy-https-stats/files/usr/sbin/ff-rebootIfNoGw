@@ -5,8 +5,7 @@ upgrade_started='/tmp/autoupdate.lock'
 batctl gwl | grep -q "No gateways in range"
 if [ $? == 0 ] ; then
   if [ -f /tmp/nogwflag ] ; then
-    [ -f $upgrade_started ] && exit 0
-    reboot -f   
+    /usr/sbin/ff-secureReboot
   else
     touch /tmp/nogwflag
   fi
@@ -23,8 +22,7 @@ fi
 if [ "$returnval" -ne 0 ] || [ -z "$ipv6_subnet" ]; then
   logger "IPv6 Anycast-IP NOT reachable."
   if [ -f /tmp/noip6routerflag ] ; then
-    [ -f $upgrade_started ] && exit
-    reboot -f
+    /usr/sbin/ff-secureReboot
     exit 0
   else
     touch /tmp/noip6routerflag
@@ -51,8 +49,7 @@ else
     logger "Stat-Server NOT reachable... rebooting in 10 seconds..."
     [ -f $upgrade_started ] && exit
     sleep 10
-    [ -f $upgrade_started ] && exit
-    reboot -f
+    /usr/sbin/ff-secureReboot
     exit
   else
     logger "Stat-Server NOT reachable."
@@ -70,6 +67,5 @@ fi
 ) &
 sleep 5
 if [ ! -f /tmp/wifi.running ]; then
-  [ -f $upgrade_started ] && exit
-  reboot -f
+  /usr/sbin/ff-secureReboot
 fi

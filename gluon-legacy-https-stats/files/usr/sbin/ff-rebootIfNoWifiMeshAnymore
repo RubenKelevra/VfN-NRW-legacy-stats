@@ -1,7 +1,7 @@
 mesh0='/tmp/wifi_mesh0_mesh'
 mesh0gone='/tmp/wifi_mesh0_mesh_gone'
-upgrade_started='/tmp/autoupdate.lock'
 
+upgrade_started='/tmp/autoupdate.lock'
 [ -f $upgrade_started ] && exit
 
 batctl o | grep -q "mesh0"
@@ -12,8 +12,7 @@ if [ $? == 0 ] ; then
 else
   if [ -f $mesh0 ]; then
     if [ -f $mesh0gone ]; then
-      [ -f $upgrade_started ] && exit
-      reboot -f
+      [/usr/sbin/ff-secureReboot
       exit
     fi
     touch $mesh0gone
