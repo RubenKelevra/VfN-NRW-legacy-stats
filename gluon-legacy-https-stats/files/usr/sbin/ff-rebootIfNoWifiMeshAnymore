@@ -12,7 +12,7 @@ if [ $? == 0 ] ; then
 else
   if [ -f $mesh0 ]; then
     if [ -f $mesh0gone ]; then
-      [/usr/sbin/ff-secureReboot
+      sh /usr/sbin/ff-secureReboot
       exit
     fi
     touch $mesh0gone

@@ -17,5 +17,5 @@ for client in $CLIENT_MACS; do
 unset CLIENT_MACS SEDDEV
 
 if [ "$clients" -eq "0" ]; then
-  /usr/sbin/ff-secureReboot
+  sh /usr/sbin/ff-secureReboot
 fi
