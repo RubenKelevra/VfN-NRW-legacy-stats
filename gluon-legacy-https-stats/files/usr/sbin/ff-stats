@@ -12,7 +12,7 @@ echo -n ///build=
 echo "$(cat /lib/gluon/release) (gluon-$(cat /lib/gluon/gluon-version)) autoupdate-branch: $(uci get autoupdater.settings.branch), autoupdate: $(uci get autoupdater.settings.enabled)"
 
 echo -n ///hwid=
-ip link show eth0 | grep "link/ether" | sed "s/^[ ]*//" | cut -d' ' -f2 | sed "s/://g"
+echo "$(cat /lib/gluon/core/sysconfig/primary_mac)" | sed "s/://g"
 
 echo -n ///timestamp=
 date +%s
