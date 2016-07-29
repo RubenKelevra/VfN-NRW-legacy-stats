@@ -42,19 +42,8 @@ for ip in $stats_server_IPs; do
 done
 if [ "$onereachable" -eq 1 ]; then
   logger "Stat-Server reachable."
-  [ -f /tmp/noip6statserverflag ] && rm -f /tmp/noip6routerflag 
 else
-  
-  if [ -f /tmp/noip6statserverflag ] ; then
-    logger "Stat-Server NOT reachable... rebooting in 10 seconds..."
-    [ -f $upgrade_started ] && exit
-    sleep 10
-    sh /usr/sbin/ff-secureReboot
-    exit
-  else
-    logger "Stat-Server NOT reachable."
-    touch /tmp/noip6statserverflag
-  fi
+  logger "Stat-Server NOT reachable."
 fi
 
 #check if wifi is stucking
