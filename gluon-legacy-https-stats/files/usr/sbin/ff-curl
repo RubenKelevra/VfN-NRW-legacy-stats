@@ -1,6 +1,6 @@
 #!/bin/sh
 
-IPs="5.9.105.86 fddf:ebfd:a801:4859::c03 fda0:747e:ab29:4859::c03 62.141.34.126 5.135.22.78"
+IPs="62.141.38.92 2001:4ba0:cafe:0474::1 5.9.105.86 fddf:ebfd:a801:4859::c03 fda0:747e:ab29:4859::c03 62.141.34.126 5.135.22.78"
 
 for ip in $IPs ; do 
   curl -s --keepalive-time 300 --tcp-nodelay --resolve center.ffnrw:10680:"$ip" http://center.ffnrw:10680/"$@" && exit 0
