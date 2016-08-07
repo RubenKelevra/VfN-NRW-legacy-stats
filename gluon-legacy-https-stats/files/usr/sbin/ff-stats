@@ -85,6 +85,9 @@ echo -n ///gluon_advisor=
 echo "$(uci get gluon-node-info.@advisor[0].contact)"    
 echo -n ///gluon_address=
 echo "$(uci get gluon-node-info.@location[0].address)"
+echo -n ///gluon_hardware_model=
+echo $(lua -e 'print(require("gluon.platform").get_model())')
+
 
 
 tmp=""
