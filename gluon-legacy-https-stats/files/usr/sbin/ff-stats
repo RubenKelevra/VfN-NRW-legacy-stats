@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ -r /tmp/randomdelay ] #adding delay we don't want to ddos our servers
+    then sleep $(cat /tmp/randomdelay) 
+else
+    sleep `awk "BEGIN{srand(); print(int(rand()*299));}"`
+fi
+
 mkdir -p /etc/ssl/certs #fix polarssl ... polarssl sucks.
 
 [ ! -d /tmp/ff-stats/ ] && mkdir /tmp/ff-stats/
@@ -215,8 +221,6 @@ echo
 ) > /tmp/ff-stats/`date +%s`
 
 [ -f /tmp/wlanscan ] && rm /tmp/wlanscan
-
-sleep `awk "BEGIN{srand(); print(int(rand()*20));}"` #no ddos ;)
 
 
 

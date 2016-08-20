@@ -40,4 +40,5 @@ start () {
 		( sh /usr/sbin/ff-offline-ssid 60 )& || true
 		sh sh /usr/sbin/ff-stats || true
 	fi
+    awk "BEGIN{srand(); print(int(rand()*299));}" > /tmp/randomdelay
 }
