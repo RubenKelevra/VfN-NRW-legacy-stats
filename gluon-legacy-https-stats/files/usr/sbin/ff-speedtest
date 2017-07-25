@@ -7,7 +7,7 @@ FPATH="/tmp/1M.bin"
 echo -ne "Testing download..."
 
 o="$(time curl -s http://$SERVER_IP/1M.bin -o $FPATH 2>&1 | grep '^real')"
-if [ "$(du $FPATH | awk '{ print $1 }')" -ne "$SIZE" ]; then
+if [ -f $FPATH -a "$(du $FPATH | awk '{ print $1 }')" -ne "$SIZE" ]; then
   echo "error, file isn't 1M"
   exit 1
 fi
@@ -35,7 +35,11 @@ if [ "$1" == "setLimits" ]; then
     exit 1
   elif [ -z "$3" ]; then
     echo "Info: not limiting download"
-  else 
+  else
+    if [ "$dl" -lt 512 ]; then
+      echo "speedtest result for download to low to support shaping"
+      exit 2
+    fi
     dl_limit="$(echo $3 | tr '%' ' ')"
     if ! [ "$dl_limit" -eq "$dl_limit" ] 2>/dev/null; then #not a number
       echo "Error: download-limit need to be a number"
@@ -44,6 +48,10 @@ if [ "$1" == "setLimits" ]; then
       echo "Error: download-limit need to be between 1(%) and 95(%)"
       exit 1
     fi
+  fi
+  if [ "$ul" -lt 90 ]; then
+    echo "speedtest result for upload to low to support shaping"
+    exit 2
   fi
   ul_limit="$(echo $2 | tr '%' ' ')"
   if ! [ "$dl_limit" -eq "$dl_limit" ] 2>/dev/null; then #not a number
@@ -57,15 +65,24 @@ if [ "$1" == "setLimits" ]; then
   echo -ne "calculate limits..."
   if [ ! -z $dl_limit ]; then
     dl_limit=`echo $dl $dl_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
+    if [ "$dl_limit" -lt 450 ]; then
+      echo "calculated download-limit to low to support shaping"
+      exit 3
+    fi
     echo ; echo "download limit: $dl_limit kbit/s"
     uci set simple-tc.mesh_vpn.limit_ingress="$dl_limit"
   else
+    echo ; echo "download limit: none"
     uci del simple-tc.mesh_vpn.limit_ingress
   fi
   dl_limit=`echo $ul $ul_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
+  if [ "$ul_imit" -lt 80 ]; then
+    echo "calculated upload-limit to low to support shaping"
+    exit 3
+  fi
   echo "download limit: $ul_limit kbit/s"
   
-  simple-tc.mesh_vpn.limit_egress="$ul_limit"
+  uci set simple-tc.mesh_vpn.limit_egress="$ul_limit"
   echo -ne "enable traffic shaper..."
   uci set simple-tc.mesh_vpn.enabled='1'
   uci commit simple-tc
