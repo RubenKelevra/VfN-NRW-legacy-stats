@@ -27,3 +27,48 @@ ul=`echo $SIZE $seconds | awk '{printf "%.0f\n",$1*8/1024/$2}'` #byte to bit, bi
 unset minutes o seconds
 echo " $ul kbit/s"
 rm -f $FPATH
+
+
+if [ "$1" == "setLimits" ]; then
+  if [ -z "$2" ]; then
+    echo "Error: upload-limit needed"
+    exit 1
+  elif [ -z "$3" ]; then
+    echo "Info: not limiting download"
+  else 
+    dl_limit="$(echo $3 | tr '%' ' ')"
+    if ! [ "$dl_limit" -eq "$dl_limit" ] 2>/dev/null; then #not a number
+      echo "Error: download-limit need to be a number"
+      exit 1
+    elif [ "$dl_limit" -gt 95 -o "$dl_limit" -lt 1 ]; then
+      echo "Error: download-limit need to be between 1(%) and 95(%)"
+      exit 1
+    fi
+  fi
+  ul_limit="$(echo $2 | tr '%' ' ')"
+  if ! [ "$dl_limit" -eq "$dl_limit" ] 2>/dev/null; then #not a number
+    echo "Error: upload-limit need to be a number"
+    exit 1
+  elif [ "$ul_limit" -gt 95 -o "$ul_limit" -lt 1 ]; then
+    echo "Error: upload-limit need to be between 1(%) and 95(%)"
+    exit 1
+  fi
+  
+  echo -ne "calculate limits..."
+  if [ ! -z $dl_limit ]; then
+    dl_limit=`echo $dl $dl_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
+    echo ; echo "download limit: $dl_limit kbit/s"
+    uci set simple-tc.mesh_vpn.limit_ingress="$dl_limit"
+  else
+    uci del simple-tc.mesh_vpn.limit_ingress
+  fi
+  dl_limit=`echo $ul $ul_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
+  echo "download limit: $ul_limit kbit/s"
+  
+  simple-tc.mesh_vpn.limit_egress="$ul_limit"
+  echo -ne "enable traffic shaper..."
+  uci set simple-tc.mesh_vpn.enabled='1'
+  uci commit simple-tc
+  /etc/init.d/fastd restart
+  echo " done."
+fi
