@@ -46,7 +46,7 @@ for i in `seq 0 4`; do
   ) > "/tmp/ff-stats_${uptimetick}_ping_bat_$i" &
 done
 
-sleep 290 #wait for the pings to be done
+sleep 290 #wait for the pings to be completed
 
 (
 echo ///start
