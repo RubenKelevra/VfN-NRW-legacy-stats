@@ -54,7 +54,7 @@ if [ "$1" == "setLimits" ]; then
     exit 2
   fi
   ul_limit="$(echo $2 | tr '%' ' ')"
-  if ! [ "$dl_limit" -eq "$dl_limit" ] 2>/dev/null; then #not a number
+  if ! [ "$ul_limit" -eq "$ul_limit" ] 2>/dev/null; then #not a number
     echo "Error: upload-limit need to be a number"
     exit 1
   elif [ "$ul_limit" -gt 95 -o "$ul_limit" -lt 1 ]; then
