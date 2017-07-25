@@ -1,20 +1,20 @@
 #!/bin/sh
 
 SERVER_IP="185.97.5.70"
-SIZE=1048576 #Byte
+SIZE=1024 #KByte
 FPATH="/tmp/1M.bin"
 
 echo -ne "Testing download..."
 
 o="$(time curl -s http://$SERVER_IP/1M.bin -o $FPATH 2>&1 | grep '^real')"
-if [ "$(du $FPATH | awk '{ print $1 }')" -ne "1024" ]; then
+if [ "$(du $FPATH | awk '{ print $1 }')" -ne "$SIZE" ]; then
   echo "error, file isn't 1M"
   exit 1
 fi
 minutes="$(echo $o | cut -d ' ' -f 2 | tr 'm' ' ')"
 seconds="$(echo $o | cut -d ' ' -f 3 | tr 's' ' ')"
 seconds=`echo $minutes $seconds | awk '{printf "%.4f\n",$1*60+$2}'`
-dl=`echo $SIZE $seconds | awk '{printf "%.0f\n",$1*8/1024/$2}'` #byte to bit, bit to kbit, div with seconds
+dl=`echo $SIZE $seconds | awk '{printf "%.0f\n",$1*8/$2}'` #byte to bit, bit to kbit, div with seconds
 unset minutes o seconds
 echo " $dl kbit/s"
 
