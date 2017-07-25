@@ -23,7 +23,7 @@ o="$(time curl -T $FPATH http://$SERVER_IP/upload/ 2>&1 | grep '^real')"
 minutes="$(echo $o | cut -d ' ' -f 2 | tr 'm' ' ')"
 seconds="$(echo $o | cut -d ' ' -f 3 | tr 's' ' ')"
 seconds=`echo $minutes $seconds | awk '{printf "%.4f\n",$1*60+$2}'`
-dl=`echo $SIZE $seconds | awk '{printf "%.0f\n",$1*8/1024/$2}'` #byte to bit, bit to kbit, div with seconds
+ul=`echo $SIZE $seconds | awk '{printf "%.0f\n",$1*8/1024/$2}'` #byte to bit, bit to kbit, div with seconds
 unset minutes o seconds
-echo " $dl kbit/s"
+echo " $ul kbit/s"
 rm -f $FPATH
