@@ -7,6 +7,10 @@ FPATH="/tmp/1M.bin"
 echo -ne "Testing download..."
 
 o="$(time curl -s http://$SERVER_IP/1M.bin -o $FPATH 2>&1 | grep '^real')"
+if ! [ -f $FPATH ]; then
+  echo "Error: Download failed"
+  exit 10
+fi
 if [ -f $FPATH -a "$(du $FPATH | awk '{ print $1 }')" -ne "$SIZE" ]; then
   echo "error, file isn't 1M"
   exit 1
