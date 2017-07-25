@@ -75,8 +75,8 @@ if [ "$1" == "setLimits" ]; then
     echo ; echo "download limit: none"
     uci del simple-tc.mesh_vpn.limit_ingress
   fi
-  dl_limit=`echo $ul $ul_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
-  if [ "$ul_imit" -lt 80 ]; then
+  ul_limit=`echo $ul $ul_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
+  if [ "$ul_limit" -lt 80 ]; then
     echo "calculated upload-limit to low to support shaping"
     exit 3
   fi
