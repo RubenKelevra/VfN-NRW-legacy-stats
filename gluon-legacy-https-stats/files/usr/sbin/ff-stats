@@ -1,11 +1,5 @@
 #!/bin/sh
 
-if [ -r /tmp/randomdelay ] #adding delay we don't want to ddos our servers
-    then sleep $(cat /tmp/randomdelay) 
-else
-    sleep `awk "BEGIN{srand(); print(int(rand()*299));}"`
-fi
-
 mkdir -p /etc/ssl/certs #fix polarssl ... polarssl sucks.
 
 [ ! -d /tmp/ff-stats/ ] && mkdir /tmp/ff-stats/
@@ -236,4 +230,9 @@ IPV6=$(echo $IPV6 |  awk '{ print $1 }')
 
 for i in /tmp/ff-stats/*; do 
   /usr/sbin/ff-curl api/collect.php?ip="$IPV6" -v -X POST --data "`cat $i`" > /tmp/ff-stats-result && rm $i || exit
+  if [ -r /tmp/randomdelay ] #adding delay we don't want to ddos our servers
+    then sleep $(cat /tmp/randomdelay) 
+  else
+    sleep `awk "BEGIN{srand(); print(int(rand()*299));}"`
+  fi
 done
