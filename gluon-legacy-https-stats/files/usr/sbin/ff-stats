@@ -12,11 +12,11 @@ ping -q -I br-wan 8.8.8.8 -c 4 -W 5 >/dev/null 2>&1 #works like blaze-mode
 if test $? -eq 0; then
   WAN_IP4_WORKING=1
   SMOKEPING_WAN_IP4_CNT=15
-  (            echo "$SMOKEPING_WAN_IP4_CNT/$(ping -I br-wan 8.8.8.8 -c $SMOKEPING_WAN_IP4_CNT -W 5 -w 50 | grep "^64 bytes from 8.8.8.8" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')" ) > "/tmp/ff-stats_${uptimetick}_ping_ip4_1" &
-  ( sleep 60;  echo "$SMOKEPING_WAN_IP4_CNT/$(ping -I br-wan 8.8.8.8 -c $SMOKEPING_WAN_IP4_CNT -W 5 -w 50 | grep "^64 bytes from 8.8.8.8" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')" ) > "/tmp/ff-stats_${uptimetick}_ping_ip4_2" &
-  ( sleep 120; echo "$SMOKEPING_WAN_IP4_CNT/$(ping -I br-wan 8.8.8.8 -c $SMOKEPING_WAN_IP4_CNT -W 5 -w 50 | grep "^64 bytes from 8.8.8.8" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')" ) > "/tmp/ff-stats_${uptimetick}_ping_ip4_3" &
-  ( sleep 180; echo "$SMOKEPING_WAN_IP4_CNT/$(ping -I br-wan 8.8.8.8 -c $SMOKEPING_WAN_IP4_CNT -W 5 -w 50 | grep "^64 bytes from 8.8.8.8" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')" ) > "/tmp/ff-stats_${uptimetick}_ping_ip4_4" &
-  ( sleep 240; echo "$SMOKEPING_WAN_IP4_CNT/$(ping -I br-wan 8.8.8.8 -c $SMOKEPING_WAN_IP4_CNT -W 5 -w 50 | grep "^64 bytes from 8.8.8.8" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')" ) > "/tmp/ff-stats_${uptimetick}_ping_ip4_5" &
+  for i in `seq 0 4`; do
+    ( sleep "$(($i * 60))"
+      [ "$i" -eq "0" ] && echo -ne "$SMOKEPING_WAN_IP4_CNT/
+      echo "$(ping -I br-wan 8.8.8.8 -c $SMOKEPING_WAN_IP4_CNT -W 5 -w 50 | grep "^64 bytes from 8.8.8.8" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')"
+      ) > "/tmp/ff-stats_${uptimetick}_ping_ip4_$i" &
 else
   WAN_IP4_WORKING=0
 fi
@@ -25,15 +25,26 @@ ping -q -I br-wan 2001:4860:4860::8888 -c 4 -W 5 >/dev/null 2>&1 #works like bla
 if test $? -eq 0; then
   WAN_IP6_WORKING=1
   SMOKEPING_WAN_IP6_CNT=15
-  (            echo "$SMOKEPING_WAN_IP6_CNT/$(ping -I br-wan 2001:4860:4860::8888 -c $SMOKEPING_WAN_IP6_CNT -W 5 -w 50 | grep "^64 bytes from 2001:4860:4860::8888" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')" ) > "/tmp/ff-stats_${uptimetick}_ping_ip6_1" &
-  ( sleep 60;  echo "$SMOKEPING_WAN_IP6_CNT/$(ping -I br-wan 2001:4860:4860::8888 -c $SMOKEPING_WAN_IP6_CNT -W 5 -w 50 | grep "^64 bytes from 2001:4860:4860::8888" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')" ) > "/tmp/ff-stats_${uptimetick}_ping_ip6_2" &
-  ( sleep 120; echo "$SMOKEPING_WAN_IP6_CNT/$(ping -I br-wan 2001:4860:4860::8888 -c $SMOKEPING_WAN_IP6_CNT -W 5 -w 50 | grep "^64 bytes from 2001:4860:4860::8888" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')" ) > "/tmp/ff-stats_${uptimetick}_ping_ip6_3" &
-  ( sleep 180; echo "$SMOKEPING_WAN_IP6_CNT/$(ping -I br-wan 2001:4860:4860::8888 -c $SMOKEPING_WAN_IP6_CNT -W 5 -w 50 | grep "^64 bytes from 2001:4860:4860::8888" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')" ) > "/tmp/ff-stats_${uptimetick}_ping_ip6_4" &
-  ( sleep 240; echo "$SMOKEPING_WAN_IP6_CNT/$(ping -I br-wan 2001:4860:4860::8888 -c $SMOKEPING_WAN_IP6_CNT -W 5 -w 50 | grep "^64 bytes from 2001:4860:4860::8888" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')" ) > "/tmp/ff-stats_${uptimetick}_ping_ip6_5" &
-  
+  for i in `seq 0 4`; do
+    ( sleep "$(($i * 60))"
+      [ "$i" -eq "0" ] && echo -ne "$SMOKEPING_WAN_IP6_CNT/
+      echo "$(ping -I br-wan 2001:4860:4860::8888 -c $SMOKEPING_WAN_IP6_CNT -W 5 -w 50 | grep "^64 bytes from 2001:4860:4860::8888" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')"
+    ) > "/tmp/ff-stats_${uptimetick}_ping_ip6_$i" &
+  done
 else
   WAN_IP6_WORKING=0
 fi
+
+SMOKEPING_BAT_CNT=15
+for i in `seq 0 4`; do
+  ( sleep "$(($i * 60))"           
+    SEL_GWM=`cat /sys/kernel/debug/batman_adv/bat0/gateways | grep "^=>" | cut -d" " -f2`
+    [ "$i" -eq "0" ] && echo -ne "$SMOKEPING_BAT_CNT/
+    echo -ne "${SEL_GWM:-"00:00:00:00:00"}/"
+    [ ! -z "$SEL_GWM" ] && echo -ne "$(batctl ping -c$SMOKEPING_BAT_CNT $SEL_GWM | grep "^20 bytes from $SEL_GWM" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ' ')"
+    echo
+  ) > "/tmp/ff-stats_${uptimetick}_ping_bat_$i" &
+done
 
 sleep 290 #wait for the pings to be done
 
@@ -77,20 +88,10 @@ echo -n ///vpnactive=
 cat /sys/kernel/debug/batman_adv/bat0/originators | grep -q mesh-vpn\\] && echo 1 || echo 0
 
 echo "///ipv4_connectivity=$WAN_IP4_WORKING"
-
-echo "///ipv4_ping1=$(cat /tmp/ff-stats_${uptimetick}_ping_ip4_1)" && rm "/tmp/ff-stats_${uptimetick}_ping_ip4_1" || true
-echo "///ipv4_ping2=$(cat /tmp/ff-stats_${uptimetick}_ping_ip4_2)" && rm "/tmp/ff-stats_${uptimetick}_ping_ip4_2" || true
-echo "///ipv4_ping3=$(cat /tmp/ff-stats_${uptimetick}_ping_ip4_3)" && rm "/tmp/ff-stats_${uptimetick}_ping_ip4_3" || true
-echo "///ipv4_ping4=$(cat /tmp/ff-stats_${uptimetick}_ping_ip4_4)" && rm "/tmp/ff-stats_${uptimetick}_ping_ip4_4" || true
-echo "///ipv4_ping5=$(cat /tmp/ff-stats_${uptimetick}_ping_ip4_5)" && rm "/tmp/ff-stats_${uptimetick}_ping_ip4_5" || true
-
+echo "///ipv4_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_ip4_* | tr '\n' ' ')" && rm "/tmp/ff-stats_${uptimetick}_ping_ip4_"* || true
 echo "///ipv6_connectivity=$WAN_IP6_WORKING"
-
-echo "///ipv6_ping1=$(cat /tmp/ff-stats_${uptimetick}_ping_ip6_1)" && rm "/tmp/ff-stats_${uptimetick}_ping_ip6_1" || true
-echo "///ipv6_ping2=$(cat /tmp/ff-stats_${uptimetick}_ping_ip6_2)" && rm "/tmp/ff-stats_${uptimetick}_ping_ip6_2" || true
-echo "///ipv6_ping3=$(cat /tmp/ff-stats_${uptimetick}_ping_ip6_3)" && rm "/tmp/ff-stats_${uptimetick}_ping_ip6_3" || true
-echo "///ipv6_ping4=$(cat /tmp/ff-stats_${uptimetick}_ping_ip6_4)" && rm "/tmp/ff-stats_${uptimetick}_ping_ip6_4" || true
-echo "///ipv6_ping5=$(cat /tmp/ff-stats_${uptimetick}_ping_ip6_5)" && rm "/tmp/ff-stats_${uptimetick}_ping_ip6_5" || true
+echo "///ipv6_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_ip6_* | tr '\n' ' ')" && rm "/tmp/ff-stats_${uptimetick}_ping_ip6_"* || true
+echo "///gw_bat_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_bat_* | tr '\n' ' ')" && rm "/tmp/ff-stats_${uptimetick}_ping_bat_"* || true
 
 echo -n ///gwq=
 echo $(cat /sys/kernel/debug/batman_adv/bat0/gateways | egrep ' \([\ 0-9]+\) ' | cut -d\( -f2 | cut -d\) -f1 | sort -n | tail -n1)
