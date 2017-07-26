@@ -34,6 +34,8 @@ unset minutes o seconds
 echo " $ul kbit/s"
 rm -f $FPATH
 
+echo "$dl" > "/tmp/ff-stats_wan_speedtest_dl"
+echo "$ul" > "/tmp/ff-stats_wan_speedtest_ul"
 
 if [ "$1" == "setLimits" ]; then
   #ensure that the txqueue is short enough:
