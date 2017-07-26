@@ -38,8 +38,14 @@ echo "$dl" > "/tmp/ff-stats_wan_speedtest_dl"
 echo "$ul" > "/tmp/ff-stats_wan_speedtest_ul"
 
 if [ "$1" == "setLimits" ]; then
-  #ensure that the txqueue is short enough:
-  uci set fastd.mesh_vpn.on_up='ifconfig mesh-vpn txqueuelen 15'
+  #ensure simple-tc is off (tbf qdisc sucks)
+  if [ "$(uci get simple-tc.mesh_vpn.enabled)" -eq "1" ]; then
+    uci set simple-tc.mesh_vpn.enabled='0' >/dev/null 2>&1 || true 
+    uci del simple-tc.mesh_vpn.limit_egress >/dev/null 2>&1 || true
+    uci del simple-tc.mesh_vpn.limit_ingress >/dev/null 2>&1 || true
+    uci commit simple-tc
+  fi
+  
   if [ -z "$2" ]; then
     echo "Error: upload-limit needed"
     exit 1
@@ -80,22 +86,33 @@ if [ "$1" == "setLimits" ]; then
       exit 3
     fi
     echo ; echo "download limit: $dl_limit kbit/s"
-    uci set simple-tc.mesh_vpn.limit_ingress="$dl_limit"
   else
     echo ; echo "download limit: none"
-    uci del simple-tc.mesh_vpn.limit_ingress >/dev/null 2>&1 || true
+    dl_limit=0
   fi
   ul_limit=`echo $ul $ul_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
   if [ "$ul_limit" -lt 80 ]; then
     echo "calculated upload-limit to low to support shaping"
     exit 3
   fi
-  echo "download limit: $ul_limit kbit/s"
-  
-  uci set simple-tc.mesh_vpn.limit_egress="$ul_limit"
+  echo "upload limit: $ul_limit kbit/s"
   echo -ne "enable traffic shaper..."
-  uci set simple-tc.mesh_vpn.enabled='1'
-  uci commit simple-tc
+  if [ "$dl_limit" -ne "0" ]; then
+    uci set fastd.mesh_vpn.on_up="modprobe sch_cake; modprobe act_mirred \
+    ip link add name ifb4mesh-vpn type ifb \
+    tc qdisc del dev mesh-vpn ingress \
+    tc qdisc add dev mesh-vpn handle ffff: ingress \
+    tc qdisc del dev ifb4mesh-vpn root \
+    tc qdisc add dev ifb4mesh-vpn root cake bandwidth ${dl_limit}kbit internet besteffort flowblind overhead 52 \
+    tc filter add dev mesh-vpn parent ffff: protocol all prio 10 u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb4mesh-vpn \
+    tc qdisc add dev mesh-vpn root cake bandwidth ${ul_limit}mbit internet besteffort flowblind overhead 52"
+  else
+    uci set fastd.mesh_vpn.on_up="modprobe sch_cake; modprobe act_mirred \
+    ip link add name ifb4mesh-vpn type ifb \
+    tc filter del dev mesh-vpn \
+    tc qdisc del dev mesh-vpn ingress \
+    tc qdisc add dev mesh-vpn root cake bandwidth ${ul_limit}mbit internet besteffort flowblind overhead 52"
+  fi
   /etc/init.d/fastd restart
   echo " done."
 fi
