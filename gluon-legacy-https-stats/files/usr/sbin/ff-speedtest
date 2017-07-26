@@ -34,6 +34,8 @@ rm -f $FPATH
 
 
 if [ "$1" == "setLimits" ]; then
+  #ensure that the txqueue is short enough:
+  uci set fastd.mesh_vpn.on_up='ifconfig mesh-vpn txqueuelen 15'
   if [ -z "$2" ]; then
     echo "Error: upload-limit needed"
     exit 1
