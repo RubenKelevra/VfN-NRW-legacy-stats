@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 SERVER_IP="185.97.5.70"
 SIZE=1024 #KByte
 FPATH="/tmp/1M.bin"
