@@ -95,13 +95,17 @@ echo "///gw_bat_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_bat_* | tr '\n' ' ')
 
 fn="/tmp/ff-stats_wan_speedtest_dl"
 if [ -f "$fn" ]; then
-  echo "///wan_speed_dl=$(cat \"$fn\")"
+  echo "///wan_speed_dl=$(cat $fn)"
   rm "$fn"
 fi
 fn="/tmp/ff-stats_wan_speedtest_ul"
 if [ -f "$fn" ]; then
-  echo "///wan_speed_ul=$(cat \"$fn\")"
+  echo "///wan_speed_ul=$(cat $fn)"
   rm "$fn"
+fi
+fn="/tmp/ff-stats_shaping"
+if [ -f "$fn" ]; then
+  echo "///shaping=$(cat $fn)"
 fi
 unset fn
 
