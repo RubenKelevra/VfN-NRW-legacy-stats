@@ -79,7 +79,7 @@ if [ "$1" == "setLimits" ]; then
     uci set simple-tc.mesh_vpn.limit_ingress="$dl_limit"
   else
     echo ; echo "download limit: none"
-    uci del simple-tc.mesh_vpn.limit_ingress
+    uci del simple-tc.mesh_vpn.limit_ingress >/dev/null 2>&1 || true
   fi
   ul_limit=`echo $ul $ul_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
   if [ "$ul_limit" -lt 80 ]; then
