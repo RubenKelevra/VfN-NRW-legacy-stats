@@ -93,6 +93,18 @@ echo "///ipv6_connectivity=$WAN_IP6_WORKING"
 echo "///ipv6_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_ip6_* | tr '\n' ' ')" && rm "/tmp/ff-stats_${uptimetick}_ping_ip6_"* || true
 echo "///gw_bat_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_bat_* | tr '\n' ' ')" && rm "/tmp/ff-stats_${uptimetick}_ping_bat_"* || true
 
+fn="/tmp/ff-stats_wan_speedtest_dl"
+if [ -f "$fn" ]; then
+  echo "///wan_speed_dl=$(cat \"$fn\")"
+  rm "$fn"
+fi
+fn="/tmp/ff-stats_wan_speedtest_ul"
+if [ -f "$fn" ]; then
+  echo "///wan_speed_ul=$(cat \"$fn\")"
+  rm "$fn"
+fi
+unset fn
+
 echo -n ///gwq=
 echo $(cat /sys/kernel/debug/batman_adv/bat0/gateways | egrep ' \([\ 0-9]+\) ' | cut -d\( -f2 | cut -d\) -f1 | sort -n | tail -n1)
 
