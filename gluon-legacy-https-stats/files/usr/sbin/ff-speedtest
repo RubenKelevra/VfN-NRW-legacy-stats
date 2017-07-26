@@ -114,5 +114,8 @@ if [ "$1" == "setLimits" ]; then
     tc qdisc add dev mesh-vpn root cake bandwidth ${ul_limit}mbit internet besteffort flowblind overhead 52"
   fi
   /etc/init.d/fastd restart
+  echo "$dl_limit/$ul_limit" > /tmp/ff-stats_shaping
   echo " done."
+else
+  rm /tmp/ff-stats_shaping >/dev/null 2>&1 || true
 fi
