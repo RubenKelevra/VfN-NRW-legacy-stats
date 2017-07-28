@@ -115,13 +115,21 @@ if [ "$1" == "setLimits" ]; then
   else
     modprobe sch_cake
     modprobe act_mirred
-    ip link add name ifb4$IF type ifb
-    tc filter del dev $IF
-    tc qdisc del dev $IF ingress
-    tc qdisc add dev $IF root cake bandwidth ${ul_limit}mbit internet besteffort flowblind overhead 52
+    #rm stuff for ingress filtering (if it's there)
+    tc qdisc del dev $IF ingress >/dev/null 2>&1 || true
+    tc qdisc del dev ifb4$IF root >/dev/null 2>&1 || true
+    tc filter del dev $IF >/dev/null 2>&1 || true
+    #limit upload
+    tc qdisc replace dev $IF root cake bandwidth ${ul_limit}mbit internet besteffort flowblind overhead 52
   fi
   echo "$dl_limit/$ul_limit" > /tmp/ff-stats_shaping
   echo " done."
+elif [ "$1" == "delLimits" ]; then
+  #remove ingress filtering stuff
+  tc qdisc del dev $IF ingress >/dev/null 2>&1 || true
+  tc qdisc del dev ifb4$IF root >/dev/null 2>&1 || true
+  tc qdisc replace dev $IF root fq_codel
+  rm /tmp/ff-stats_shaping >/dev/null 2>&1 || true
 else
   rm /tmp/ff-stats_shaping >/dev/null 2>&1 || true
 fi
