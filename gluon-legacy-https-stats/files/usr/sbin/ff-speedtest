@@ -103,22 +103,23 @@ if [ "$1" == "setLimits" ]; then
   echo "upload limit: $ul_limit kbit/s"
   echo -ne 'enable traffic shaper...'
   if [ "$dl_limit" -ne "0" ]; then
-    uci set fastd.mesh_vpn.on_up="modprobe sch_cake; modprobe act_mirred \
-    ip link add name ifb4mesh-vpn type ifb \
-    tc qdisc del dev mesh-vpn ingress \
-    tc qdisc add dev mesh-vpn handle ffff: ingress \
-    tc qdisc del dev ifb4mesh-vpn root \
-    tc qdisc add dev ifb4mesh-vpn root cake bandwidth ${dl_limit}kbit internet besteffort flowblind overhead 52 \
-    tc filter add dev mesh-vpn parent ffff: protocol all prio 10 u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb4mesh-vpn \
-    tc qdisc add dev mesh-vpn root cake bandwidth ${ul_limit}mbit internet besteffort flowblind overhead 52"
+    modprobe sch_cake
+    modprobe act_mirred
+    ip link add name ifb4mesh-vpn type ifb
+    tc qdisc del dev mesh-vpn ingress
+    tc qdisc add dev mesh-vpn handle ffff: ingress
+    tc qdisc del dev ifb4mesh-vpn root
+    tc qdisc add dev ifb4mesh-vpn root cake bandwidth ${dl_limit}kbit internet besteffort flowblind overhead 52
+    tc filter add dev mesh-vpn parent ffff: protocol all prio 10 u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb4mesh-vpn
+    tc qdisc add dev mesh-vpn root cake bandwidth ${ul_limit}mbit internet besteffort flowblind overhead 52
   else
-    uci set fastd.mesh_vpn.on_up="modprobe sch_cake; modprobe act_mirred \
-    ip link add name ifb4mesh-vpn type ifb \
-    tc filter del dev mesh-vpn \
-    tc qdisc del dev mesh-vpn ingress \
-    tc qdisc add dev mesh-vpn root cake bandwidth ${ul_limit}mbit internet besteffort flowblind overhead 52"
+    modprobe sch_cake
+    modprobe act_mirred
+    ip link add name ifb4mesh-vpn type ifb
+    tc filter del dev mesh-vpn
+    tc qdisc del dev mesh-vpn ingress
+    tc qdisc add dev mesh-vpn root cake bandwidth ${ul_limit}mbit internet besteffort flowblind overhead 52
   fi
-  /etc/init.d/fastd restart
   echo "$dl_limit/$ul_limit" > /tmp/ff-stats_shaping
   echo " done."
 else
