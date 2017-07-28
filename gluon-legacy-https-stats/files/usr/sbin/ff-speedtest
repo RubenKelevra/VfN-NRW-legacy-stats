@@ -2,19 +2,19 @@
 
 set -e
 
-SERVER_IP="185.97.5.70"
+SERVER_IP='185.97.5.70'
 SIZE=1024 #KByte
-FPATH="/tmp/1M.bin"
+FPATH='/tmp/1M.bin'
 
-echo -ne "Testing download..."
+echo -ne 'Testing download...'
 
-o="$(time curl -s http://$SERVER_IP/1M.bin -o $FPATH 2>&1 | grep '^real')"
-if ! [ -f $FPATH ]; then
-  echo "Error: Download failed"
+o=`time curl -s http://$SERVER_IP/1M.bin -o $FPATH 2>&1 | grep '^real'`
+if ! [ -f "$FPATH" ]; then
+  echo 'Error: Download failed'
   exit 10
 fi
-if [ "$(du $FPATH | awk '{ print $1 }')" -ne "$SIZE" ]; then
-  echo "error, file isn't 1M"
+if [ `du "$FPATH" | awk '{ print $1 }'` -ne "$SIZE" ]; then
+  echo 'error, file isn't 1M'
   exit 1
 fi
 minutes="$(echo $o | cut -d ' ' -f 2 | tr 'm' ' ')"
@@ -25,17 +25,17 @@ unset minutes o seconds
 echo " $dl kbit/s"
 
 echo -ne "Testing upload..."
-o="$(time curl -T $FPATH http://$SERVER_IP/upload/ 2>&1 | grep '^real')"
-minutes="$(echo $o | cut -d ' ' -f 2 | tr 'm' ' ')"
-seconds="$(echo $o | cut -d ' ' -f 3 | tr 's' ' ')"
+o=`time curl -T $FPATH http://$SERVER_IP/upload/ 2>&1 | grep '^real')`
+minutes=`echo $o | cut -d ' ' -f 2 | tr 'm' ' '`
+seconds=`echo $o | cut -d ' ' -f 3 | tr 's' ' '`
 seconds=`echo $minutes $seconds | awk '{printf "%.4f\n",$1*60+$2}'`
 ul=`echo $SIZE $seconds | awk '{printf "%.0f\n",$1*8/$2}'` #byte to bit, bit to kbit, div with seconds
 unset minutes o seconds
 echo " $ul kbit/s"
 rm -f $FPATH
 
-echo "$dl" > "/tmp/ff-stats_wan_speedtest_dl"
-echo "$ul" > "/tmp/ff-stats_wan_speedtest_ul"
+echo "$dl" > /tmp/ff-stats_wan_speedtest_dl
+echo "$ul" > /tmp/ff-stats_wan_speedtest_ul
 
 if [ "$1" == "setLimits" ]; then
   #ensure simple-tc is off (tbf qdisc sucks)
@@ -47,34 +47,34 @@ if [ "$1" == "setLimits" ]; then
   fi
   
   if [ -z "$2" ]; then
-    echo "Error: upload-limit needed"
+    echo 'Error: upload-limit needed'
     exit 1
   elif [ -z "$3" ]; then
-    echo "Info: not limiting download"
+    echo 'Info: not limiting download'
   else
     if [ "$dl" -lt 512 ]; then
-      echo "speedtest result for download to low to support shaping"
+      echo 'speedtest result for download to low to support shaping'
       exit 2
     fi
-    dl_limit="$(echo $3 | tr '%' ' ')"
+    dl_limit=`echo $3 | tr '%' ' '`
     if ! [ "$dl_limit" -eq "$dl_limit" ] 2>/dev/null; then #not a number
-      echo "Error: download-limit need to be a number"
+      echo 'Error: download-limit need to be a number'
       exit 1
     elif [ "$dl_limit" -gt 95 -o "$dl_limit" -lt 1 ]; then
-      echo "Error: download-limit need to be between 1(%) and 95(%)"
+      echo 'Error: download-limit need to be between 1(%) and 95(%)'
       exit 1
     fi
   fi
   if [ "$ul" -lt 90 ]; then
-    echo "speedtest result for upload to low to support shaping"
+    echo 'speedtest result for upload to low to support shaping'
     exit 2
   fi
   ul_limit="$(echo $2 | tr '%' ' ')"
   if ! [ "$ul_limit" -eq "$ul_limit" ] 2>/dev/null; then #not a number
-    echo "Error: upload-limit need to be a number"
+    echo 'Error: upload-limit need to be a number'
     exit 1
   elif [ "$ul_limit" -gt 95 -o "$ul_limit" -lt 1 ]; then
-    echo "Error: upload-limit need to be between 1(%) and 95(%)"
+    echo 'Error: upload-limit need to be between 1(%) and 95(%)'
     exit 1
   fi
   
@@ -82,21 +82,21 @@ if [ "$1" == "setLimits" ]; then
   if [ ! -z $dl_limit ]; then
     dl_limit=`echo $dl $dl_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
     if [ "$dl_limit" -lt 450 ]; then
-      echo "calculated download-limit to low to support shaping"
+      echo 'calculated download-limit to low to support shaping'
       exit 3
     fi
     echo ; echo "download limit: $dl_limit kbit/s"
   else
-    echo ; echo "download limit: none"
+    echo ; echo 'download limit: none'
     dl_limit=0
   fi
   ul_limit=`echo $ul $ul_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
   if [ "$ul_limit" -lt 80 ]; then
-    echo "calculated upload-limit to low to support shaping"
+    echo 'calculated upload-limit to low to support shaping'
     exit 3
   fi
   echo "upload limit: $ul_limit kbit/s"
-  echo -ne "enable traffic shaper..."
+  echo -ne 'enable traffic shaper...'
   if [ "$dl_limit" -ne "0" ]; then
     uci set fastd.mesh_vpn.on_up="modprobe sch_cake; modprobe act_mirred \
     ip link add name ifb4mesh-vpn type ifb \
