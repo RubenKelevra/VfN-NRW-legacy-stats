@@ -5,6 +5,11 @@ set -e
 SERVER_IP='185.97.5.70'
 SIZE=1024 #KByte
 FPATH='/tmp/1M.bin'
+MINIMAL_VALID_DL=512
+MINIMAL_DL_LIMIT=450
+MINIMAL_VALID_UL=90
+MINIMAL_UL_LIMIT=80
+IF='mesh-vpn'
 
 echo -ne 'Testing download...'
 
@@ -52,7 +57,7 @@ if [ "$1" == "setLimits" ]; then
   elif [ -z "$3" ]; then
     echo 'Info: not limiting download'
   else
-    if [ "$dl" -lt 512 ]; then
+    if [ "$dl" -lt $MINIMAL_VALID_DL ]; then
       echo 'speedtest result for download to low to support shaping'
       exit 2
     fi
@@ -65,7 +70,7 @@ if [ "$1" == "setLimits" ]; then
       exit 1
     fi
   fi
-  if [ "$ul" -lt 90 ]; then
+  if [ "$ul" -lt $MINIMAL_VALID_UL ]; then
     echo 'speedtest result for upload to low to support shaping'
     exit 2
   fi
@@ -81,7 +86,7 @@ if [ "$1" == "setLimits" ]; then
   echo -ne "calculate limits..."
   if [ ! -z $dl_limit ]; then
     dl_limit=`echo $dl $dl_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
-    if [ "$dl_limit" -lt 450 ]; then
+    if [ "$dl_limit" -lt $MINIMAL_DL_LIMIT ]; then
       echo 'calculated download-limit to low to support shaping'
       exit 3
     fi
@@ -91,7 +96,7 @@ if [ "$1" == "setLimits" ]; then
     dl_limit=0
   fi
   ul_limit=`echo $ul $ul_limit  | awk '{printf "%.0f\n",$1*($2/100)}'`
-  if [ "$ul_limit" -lt 80 ]; then
+  if [ "$ul_limit" -lt $MINIMAL_UL_LIMIT ]; then
     echo 'calculated upload-limit to low to support shaping'
     exit 3
   fi
