@@ -1,0 +1,13 @@
+#!/bin/sh
+IPs=`nslookup new-node-api.vfn-nrw.de 127.0.0.1:54 | grep ^Address | grep -v "127.0.0.1"| awk '{ print $3 }'`
+
+for ip in $pub_ips ; do 
+  curl -s --keepalive-time 300 --tcp-nodelay --resolve new-node-api.vfn-nrw.de:80:"$ip" http://new-node-api.vfn-nrw.de:10680/"$@" && exit 0
+done
+
+IPs="fded:e4ca:2d50:87b4::1"
+
+for ip in $IPs ; do 
+  curl -s --keepalive-time 300 --tcp-nodelay --resolve new-node-api.vfn-nrw.de:80:"$ip" http://new-node-api.vfn-nrw.de:10680/"$@" && exit 0
+done
+exit 1
