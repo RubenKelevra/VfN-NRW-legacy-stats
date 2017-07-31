@@ -273,10 +273,17 @@ fi
 
 IPV6=$(echo $IPV6 |  awk '{ print $1 }')
 
+success=0
+
 for i in /tmp/ff-stats/*; do 
   #try to send stuff to new API-Server
-  /usr/sbin/ff-new-curl post/legacy-stats -v -X POST --data "`cat $i`" || true
-  /usr/sbin/ff-curl api/collect.php?ip="$IPV6" -v -X POST --data "`cat $i`" > /tmp/ff-stats-result && rm $i || exit
+  /usr/sbin/ff-new-curl post/legacy-stats -v -X POST --data "`cat $i`" && success=1 || true
+  /usr/sbin/ff-curl api/collect.php?ip="$IPV6" -v -X POST --data "`cat $i`" > /tmp/ff-stats-result && success=1 || true
+  if [ $success -eq 1 ]; then
+    rm $i
+  else
+    exit
+  fi
   if [ -r /tmp/randomdelay ] #adding delay we don't want to ddos our servers
     then sleep $(cat /tmp/randomdelay) 
   else
