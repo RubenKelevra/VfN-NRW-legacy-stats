@@ -7,6 +7,7 @@ mkdir -p /etc/ssl/certs #fix polarssl ... polarssl sucks.
 [ ! -d /tmp/ff-stats/ ] && mkdir /tmp/ff-stats/
 L2MESH=$(/usr/sbin/brctl show | sed -n -e '/^br-client[[:space:]]/,/^\S/ { /^\(br-client[[:space:]]\|\t\)/s/^.*\t//p }' | grep -v bat0 | tr '\n' ' ')
 BATIF=$(for i in `ls -1 /sys/class/net/`; do [ -f /sys/class/net/$i/batman_adv/mesh_iface ] && grep -q bat0 /sys/class/net/$i/batman_adv/mesh_iface && echo -n "$i "; done)
+MAINBATMAC="$(batctl o | head -n1 | awk '{ print $5 }' | cut -d'/' -f2)"
 
 ping -q -I br-wan 8.8.8.8 -c 4 -W 5 >/dev/null 2>&1 #works like blaze-mode
 if test $? -eq 0; then
@@ -136,6 +137,7 @@ echo -n ///gluon_address=
 echo "$(uci get gluon-node-info.@location[0].address)"
 echo -n ///gluon_hardware_model=
 echo $(lua -e 'print(require("gluon.platform").get_model())')
+echo "///batman_main_mac=$MAINBATMAC"
 
 tmp=""
 
