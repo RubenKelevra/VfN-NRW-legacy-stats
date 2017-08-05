@@ -295,9 +295,5 @@ for i in /tmp/ff-stats/*; do
   else
     exit
   fi
-  if [ -r /tmp/randomdelay ] #adding delay we don't want to ddos our servers
-    then sleep $(cat /tmp/randomdelay) 
-  else
-    sleep `awk "BEGIN{srand(); print(int(rand()*299));}"`
-  fi
+  sleep `awk "BEGIN{srand(); print(int(rand()*15));}"`
 done
