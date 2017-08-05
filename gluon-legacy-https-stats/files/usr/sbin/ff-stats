@@ -223,7 +223,7 @@ unset airtime_input
 )
 
 echo ///bathoods
-bats=$(batctl o | sed 's/[\(\)]//g' | awk '{ if ($1 == $4) { print $1 "=" $3 }}')
+bats=$(batctl o | sed 's/[\(\)]//g' | sed 's/]://g' | awk '{ if ($1 == $4) { print $1 "=" $3 "=" $6 }}')
 for bat in $bats; do
   bat_mac=$(echo $bat | cut -d '=' -f 1)
   bat_txrate=$(iw dev ibss0 station dump | grep -E "^Station|tx bitrate" | grep -A1 "$bat_mac" | grep "tx bitrate" | cut -d ' ' -f 2 | cut -d$'\t' -f 2)
