@@ -72,6 +72,9 @@ top -bn1 | grep ^CPU | awk '{ print $2,$4,$6,$8,$10,$12,$14 }' | sed 's/% /,/g' 
 echo -n ///memory_stats=
 free | grep "^Mem" | awk '{ print $2,$3,$4,$6 }' | sed 's/ /,/g'
 
+echo -n ///no_of_cpus=
+cat /proc/cpuinfo | grep ^processor | wc -l
+
 echo ///l2mesh=$L2MESH
 
 echo ///batif=$BATIF
