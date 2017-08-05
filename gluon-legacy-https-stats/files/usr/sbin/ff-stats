@@ -75,6 +75,11 @@ free | grep "^Mem" | awk '{ print $2,$3,$4,$6 }' | sed 's/ /,/g'
 echo -n ///no_of_cpus=
 cat /proc/cpuinfo | grep ^processor | wc -l
 
+echo -n ///bogomips=
+echo $(cat /proc/cpuinfo | grep -i BogoMIPS | cut -d':' -f2 | cut -d' ' -f2 | tr '\n' ',' | sed "s/,$//")
+
+cat /proc/cpuinfo | grep -i BogoMIPS 
+
 echo ///l2mesh=$L2MESH
 
 echo ///batif=$BATIF
