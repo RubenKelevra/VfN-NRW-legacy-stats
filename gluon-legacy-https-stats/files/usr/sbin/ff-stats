@@ -149,6 +149,89 @@ echo "$(uci get gluon-node-info.@location[0].address)"
 echo -n ///gluon_hardware_model=
 echo $(lua -e 'print(require("gluon.platform").get_model())')
 echo "///batman_main_mac=$MAINBATMAC"
+echo -n ///mesh_on_wan=
+uci get network.mesh_wan.auto || echo 0
+echo -n ///radio0_installed=
+uci -q get wireless.radio0 > /dev/null 
+if [ $? -eq 0 ]; then
+  echo 1
+  echo -n ///radio0_chan=
+  uci -q get wireless.radio0.channel
+  echo -n ///radio0_hwmode=
+  uci -q get wireless.radio0.hwmode
+  echo -n ///radio0_htmode=
+  uci -q get wireless.radio0.htmode
+  echo -n ///radio0_ibss_configured=
+  uci -q get wireless.ibss_radio0 >/dev/null
+  if [ $? -eq 0 ]; then
+    echo 1
+    echo -n ///radio0_ibss_disabled=
+    uci -q get wireless.ibss_radio0.disabled || echo 0
+  else
+    echo 0
+  fi
+  echo -n ///radio0_mesh_configured=
+  uci -q get wireless.mesh_radio0 >/dev/null
+  if [ $? -eq 0 ]; then
+    echo 1
+    echo -n ///radio0_mesh_disabled=
+    uci -q get wireless.mesh_radio0.disabled || echo 0
+  else
+    echo 0
+  fi
+  echo -n ///radio0_ap_configured=
+  uci -q get wireless.client_radio0 >/dev/null
+  if [ $? -eq 0 ]; then
+    echo 1
+    echo -n ///radio0_ap_disabled=
+    uci -q get wireless.client_radio0.disabled || echo 0
+  else
+    echo 0
+  fi
+else
+  echo 0
+fi
+
+echo -n ///radio1_installed=
+uci -q get wireless.radio1 > /dev/null 
+if [ $? -eq 0 ]; then
+  echo 1
+  echo -n ///radio1_chan=
+  uci -q get wireless.radio1.channel
+  echo -n ///radio1_hwmode=
+  uci -q get wireless.radio1.hwmode
+  echo -n ///radio1_htmode=
+  uci -q get wireless.radio1.htmode
+  echo -n ///radio1_ibss_configured=
+  uci -q get wireless.ibss_radio1 >/dev/null
+  if [ $? -eq 0 ]; then
+    echo 1
+    echo -n ///radio1_ibss_disabled=
+    uci -q get wireless.ibss_radio1.disabled || echo 0
+  else
+    echo 0
+  fi
+  echo -n ///radio1_mesh_configured=
+  uci -q get wireless.mesh_radio1 >/dev/null
+  if [ $? -eq 0 ]; then
+    echo 1
+    echo -n ///radio1_mesh_disabled=
+    uci -q get wireless.mesh_radio1.disabled || echo 0
+  else
+    echo 0
+  fi
+  echo -n ///radio1_ap_configured=
+  uci -q get wireless.client_radio1 >/dev/null
+  if [ $? -eq 0 ]; then
+    echo 1
+    echo -n ///radio1_ap_disabled=
+    uci -q get wireless.client_radio1.disabled || echo 0
+  else
+    echo 0
+  fi
+else
+  echo 0
+fi
 
 tmp=""
 
