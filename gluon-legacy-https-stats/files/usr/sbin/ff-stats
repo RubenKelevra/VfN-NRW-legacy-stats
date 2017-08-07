@@ -100,10 +100,10 @@ echo -n ///vpnactive=
 cat /sys/kernel/debug/batman_adv/bat0/originators | grep -q mesh-vpn\\] && echo 1 || echo 0
 
 echo "///ipv4_connectivity=$WAN_IP4_WORKING"
-echo "///ipv4_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_ip4_* | tr '\n' ' ')" && rm "/tmp/ff-stats_${uptimetick}_ping_ip4_"* || true
+echo "///ipv4_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_ip4_* | tr '\n' '#')" && rm "/tmp/ff-stats_${uptimetick}_ping_ip4_"* || true
 echo "///ipv6_connectivity=$WAN_IP6_WORKING"
-echo "///ipv6_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_ip6_* | tr '\n' ' ')" && rm "/tmp/ff-stats_${uptimetick}_ping_ip6_"* || true
-echo "///gw_bat_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_bat_* | tr '\n' ' ')" && rm "/tmp/ff-stats_${uptimetick}_ping_bat_"* || true
+echo "///ipv6_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_ip6_* | tr '\n' '#')" && rm "/tmp/ff-stats_${uptimetick}_ping_ip6_"* || true
+echo "///gw_bat_ping=$(cat /tmp/ff-stats_${uptimetick}_ping_bat_* | tr '\n' '#')" && rm "/tmp/ff-stats_${uptimetick}_ping_bat_"* || true
 
 fn="/tmp/ff-stats_wan_speedtest_dl"
 if [ -f "$fn" ]; then
