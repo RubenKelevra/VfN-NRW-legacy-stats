@@ -18,6 +18,7 @@ if test $? -eq 0; then
       [ "$i" -eq "0" ] && echo -n "$SMOKEPING_WAN_IP4_CNT/"
       echo "$(ping -I br-wan 8.8.8.8 -c $SMOKEPING_WAN_IP4_CNT -W 5 -w 50 | grep "^64 bytes from 8.8.8.8" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ',' | sed "s/,$//")"
       ) > "/tmp/ff-stats_${uptimetick}_ping_ip4_$i" &
+  done
 else
   WAN_IP4_WORKING=0
 fi
