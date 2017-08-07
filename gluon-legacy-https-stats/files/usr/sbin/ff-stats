@@ -16,7 +16,7 @@ if test $? -eq 0; then
   for i in `seq 0 4`; do
     ( sleep "$(($i * 60))"
       [ "$i" -eq "0" ] && echo -n "$SMOKEPING_WAN_IP4_CNT/"
-      echo "$(ping -I br-wan 8.8.8.8 -c $SMOKEPING_WAN_IP4_CNT -W 5 -w 50 | grep "^64 bytes from 8.8.8.8" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ',')"
+      echo "$(ping -I br-wan 8.8.8.8 -c $SMOKEPING_WAN_IP4_CNT -W 5 -w 50 | grep "^64 bytes from 8.8.8.8" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ',' | sed "s/,$//")"
       ) > "/tmp/ff-stats_${uptimetick}_ping_ip4_$i" &
 else
   WAN_IP4_WORKING=0
@@ -29,7 +29,7 @@ if test $? -eq 0; then
   for i in `seq 0 4`; do
     ( sleep "$(($i * 60))"
       [ "$i" -eq "0" ] && echo -n "$SMOKEPING_WAN_IP6_CNT/"
-      echo "$(ping -I br-wan 2001:4860:4860::8888 -c $SMOKEPING_WAN_IP6_CNT -W 5 -w 50 | grep "^64 bytes from 2001:4860:4860::8888" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ',')"
+      echo "$(ping -I br-wan 2001:4860:4860::8888 -c $SMOKEPING_WAN_IP6_CNT -W 5 -w 50 | grep "^64 bytes from 2001:4860:4860::8888" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ',' | sed "s/,$//")"
     ) > "/tmp/ff-stats_${uptimetick}_ping_ip6_$i" &
   done
 else
@@ -42,7 +42,7 @@ for i in `seq 0 4`; do
     SEL_GWM=`cat /sys/kernel/debug/batman_adv/bat0/gateways | grep "^=>" | cut -d" " -f2`
     [ "$i" -eq "0" ] && echo -n "$SMOKEPING_BAT_CNT/"
     echo -n "${SEL_GWM:-"00:00:00:00:00:00"}/"
-    [ ! -z "$SEL_GWM" ] && echo -n "$(batctl ping -c$SMOKEPING_BAT_CNT $SEL_GWM | grep "^20 bytes from $SEL_GWM" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ',')"
+    [ ! -z "$SEL_GWM" ] && echo -n "$(batctl ping -c$SMOKEPING_BAT_CNT $SEL_GWM | grep "^20 bytes from $SEL_GWM" | cut -d'=' -f 4 | cut -d' ' -f 1 | tr '\n' ',' | sed "s/,$//")"
     echo
   ) > "/tmp/ff-stats_${uptimetick}_ping_bat_$i" &
 done
