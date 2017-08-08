@@ -6,6 +6,7 @@ mkdir -p /etc/ssl/certs #fix polarssl ... polarssl sucks.
 
 [ ! -d /tmp/ff-stats/ ] && mkdir /tmp/ff-stats/
 L2MESH=$(/usr/sbin/brctl show | sed -n -e '/^br-client[[:space:]]/,/^\S/ { /^\(br-client[[:space:]]\|\t\)/s/^.*\t//p }' | grep -v bat0 | tr '\n' ' ')
+WANIF=$(/usr/sbin/brctl show | sed -n -e '/^br-wan[[:space:]]/,/^\S/ { /^\(br-wan[[:space:]]\|\t\)/s/^.*\t//p }' | tr '\n' ' ')
 BATIF=$(for i in `ls -1 /sys/class/net/`; do [ -f /sys/class/net/$i/batman_adv/mesh_iface ] && grep -q bat0 /sys/class/net/$i/batman_adv/mesh_iface && echo -n "$i "; done)
 MAINBATMAC="$(batctl o | head -n1 | awk '{ print $5 }' | cut -d'/' -f2)"
 
@@ -82,6 +83,8 @@ echo $(cat /proc/cpuinfo | grep -i BogoMIPS | cut -d':' -f2 | cut -d' ' -f2 | tr
 cat /proc/cpuinfo | grep -i BogoMIPS 
 
 echo ///l2mesh=$L2MESH
+
+echo ///wanif=$WANIF
 
 echo ///batif=$BATIF
 
